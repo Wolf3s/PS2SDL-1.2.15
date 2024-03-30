@@ -106,5 +106,9 @@
 #undef __WIN32__
 #define __WIN32__	1
 #endif
+#if defined(_EE) 
+#undef __PS2__
+#define __PS2__ 1
+#endif
 
 #endif /* _SDL_platform_h */

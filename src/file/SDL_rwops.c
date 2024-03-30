@@ -316,14 +316,23 @@ static int SDLCALL win32_file_close(SDL_RWops *context)
 }
 #endif /* __WIN32__ */
 
+#if defined(__PS2__) && (PS2_ROMFS)
+#include <romfs_io.h>
+#endif
+
 #ifdef HAVE_STDIO_H
 
 /* Functions to read/write stdio file pointers */
 
 static int SDLCALL stdio_seek(SDL_RWops *context, int offset, int whence)
 {
+#if defined(__PS2__) && defined(PS2_ROMFS)
+	if ( rseek(context->hidden.stdio.fp, offset, whence) == 0 ) {
+		return(rtell(context->hidden.stdio.fp));
+#else
 	if ( fseek(context->hidden.stdio.fp, offset, whence) == 0 ) {
-		return(ftell(context->hidden.stdio.fp));
+		return(ftell(context->hidden.stdio.fp));	
+#endif
 	} else {
 		SDL_Error(SDL_EFSEEK);
 		return(-1);
@@ -332,8 +341,11 @@ static int SDLCALL stdio_seek(SDL_RWops *context, int offset, int whence)
 static int SDLCALL stdio_read(SDL_RWops *context, void *ptr, int size, int maxnum)
 {
 	size_t nread;
-
+#if defined(__PS2__) && defined(PS2_ROMFS)
+    nread = rread(ptr, size, maxnum, context->hidden.stdio.fp); 
+#else
 	nread = fread(ptr, size, maxnum, context->hidden.stdio.fp); 
+#endif
 	if ( nread == 0 && ferror(context->hidden.stdio.fp) ) {
 		SDL_Error(SDL_EFREAD);
 	}
@@ -342,8 +354,11 @@ static int SDLCALL stdio_read(SDL_RWops *context, void *ptr, int size, int maxnu
 static int SDLCALL stdio_write(SDL_RWops *context, const void *ptr, int size, int num)
 {
 	size_t nwrote;
-
+#if defined(__PS2__) && defined(PS2_ROMFS)
+	nwrote = rwrite(ptr, size, num, context->hidden.stdio.fp);
+#else
 	nwrote = fwrite(ptr, size, num, context->hidden.stdio.fp);
+#endif
 	if ( nwrote == 0 && ferror(context->hidden.stdio.fp) ) {
 		SDL_Error(SDL_EFWRITE);
 	}
@@ -354,7 +369,11 @@ static int SDLCALL stdio_close(SDL_RWops *context)
 	if ( context ) {
 		if ( context->hidden.stdio.autoclose ) {
 			/* WARNING:  Check the return value here! */
+#if defined(__PS2__) && defined(PS2_ROMFS)
+			rclose(context->hidden.stdio.fp);
+#else
 			fclose(context->hidden.stdio.fp);
+#endif
 		}
 		SDL_FreeRW(context);
 	}
@@ -514,7 +533,11 @@ SDL_RWops *SDL_RWFromFile(const char *file, const char *mode)
 		SDL_free(mpath);
 	}
 #else
+#if defined(__PS2__) && defined(PS2_ROMFS) // PlayStation 2 romfs
+	fp = ropen(file, mode);
+#else
 	fp = fopen(file, mode);
+#endif
 #endif
 	if ( fp == NULL ) {
 		SDL_SetError("Couldn't open %s", file);

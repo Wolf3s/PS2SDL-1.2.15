@@ -98,6 +98,9 @@ static AudioBootStrap *bootstrap[] = {
 #if SDL_AUDIO_DRIVER_DUMMY
 	&DUMMYAUD_bootstrap,
 #endif
+#if SDL_AUDIO_DRIVER_PS2AUD
+	&PS2AUD_bootstrap,
+#endif
 #if SDL_AUDIO_DRIVER_DC
 	&DCAUD_bootstrap,
 #endif

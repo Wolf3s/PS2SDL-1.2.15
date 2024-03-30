@@ -43,6 +43,8 @@
 #include "win32/SDL_systhread_c.h"
 #elif SDL_THREAD_SYMBIAN
 #include "symbian/SDL_systhread_c.h"
+#elif SDL_THREAD_PS2
+#include "ps2sdk/SDL_systhread_c.h"
 #else
 #error Need thread implementation for this platform
 #include "generic/SDL_systhread_c.h"
