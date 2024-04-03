@@ -164,7 +164,7 @@ extern AudioBootStrap DISKAUD_bootstrap;
 #if SDL_AUDIO_DRIVER_DUMMY
 extern AudioBootStrap DUMMYAUD_bootstrap;
 #endif
-#if SDL_AUDIO_DRIVER_PS2AUD
+#if SDL_AUDIO_DRIVER_PS2
 extern AudioBootStrap PS2AUD_bootstrap;
 #endif
 #if SDL_AUDIO_DRIVER_DC
