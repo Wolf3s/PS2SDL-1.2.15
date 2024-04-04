@@ -139,7 +139,7 @@
 /* #undef SDL_VIDEO_DISABLED */
 
 /* Enable various audio drivers */
-#define SDL_AUDIO_DRIVER_PS2 1 /* Not working */
+#define SDL_AUDIO_DRIVER_PS2 1 
 
 /* Enable various cdrom drivers */
 #define SDL_CDROM_PS2 1
